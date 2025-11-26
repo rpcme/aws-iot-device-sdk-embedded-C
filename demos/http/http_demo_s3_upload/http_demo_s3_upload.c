@@ -44,6 +44,9 @@
 /*Include backoff algorithm header for retry logic.*/
 #include "backoff_algorithm.h"
 
+/* Clock for timer. */
+#include "clock.h"
+
 /* Check that TLS port of the server is defined. */
 #ifndef HTTPS_PORT
     #error "Please define a HTTPS_PORT."
@@ -553,6 +556,9 @@ static bool uploadS3ObjectFile( const TransportInterface_t * pTransportInterface
      * headers is reused here. */
     response.pBuffer = userBuffer;
     response.bufferLen = USER_BUFFER_LENGTH;
+
+    /* Enable use of HTTP_SEND_RETRY_TIMEOUT_MS */
+    response.getTime = Clock_GetTimeMs;
 
     if( httpStatus == HTTPSuccess )
     {
