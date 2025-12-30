@@ -26,12 +26,6 @@ target_link_libraries(
         openssl_posix
 )
 
-target_compile_definitions(
-    ${DEMO_NAME}
-    PRIVATE
-        MQTT_VERSION=500
-)
-
 target_include_directories(
     ${DEMO_NAME}
     PUBLIC

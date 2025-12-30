@@ -44,6 +44,9 @@ option( BUILD_CLONE_SUBMODULES
 option( DOWNLOAD_CERTS
         "Set this to ON to automatically download certificates needed to run the demo. When OFF, certificates must be manually downloaded."
         ON )
+option( MQTT_VERSION_5
+        "Set this to ON to build with MQTT 5.0 support. When OFF (default), builds with MQTT 3.1.1."
+        OFF )
 option( INSTALL_PLATFORM_ABSTRACTIONS
         "Set this to ON to install POSIX platform abstractions that are used together with the C-SDK libraries in the demos."
         ON )
@@ -64,6 +67,15 @@ CMAKE_DEPENDENT_OPTION( BUILD_SHARED_LIBS
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib )
+
+# Set MQTT version compile definition
+if( MQTT_VERSION_5 )
+    add_compile_definitions( MQTT_VERSION=500 )
+    message( STATUS "Building with MQTT 5.0 support" )
+else()
+    add_compile_definitions( MQTT_VERSION=311 )
+    message( STATUS "Building with MQTT 3.1.1 support (default)" )
+endif()
 
 # Set prefix to PWD if any path flags are relative.
 # PWD is set to the path where you run the cmake command.

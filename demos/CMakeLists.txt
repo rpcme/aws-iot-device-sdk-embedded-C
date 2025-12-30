@@ -62,3 +62,32 @@ if(NOT HAVE_FORK)
         set_target_properties(${demo_name} PROPERTIES EXCLUDE_FROM_ALL true)
     endforeach()
 endif()
+
+# Exclude MQTT version-specific demos based on MQTT_VERSION_5 option
+if( MQTT_VERSION_5 )
+    # Exclude MQTT 3.1.1 demos when building for MQTT 5
+    set(mqtt_3_1_1_demos
+            "mqtt_demo_basic_tls"
+            "mqtt_demo_mutual_auth"
+            "mqtt_demo_plaintext"
+            "mqtt_demo_serializer"
+            "mqtt_demo_subscription_manager"
+    )
+    message( STATUS "MQTT 5.0 enabled - excluding MQTT 3.1.1 demos from build" )
+    foreach(demo_name ${mqtt_3_1_1_demos})
+        if(TARGET ${demo_name})
+            set_target_properties(${demo_name} PROPERTIES EXCLUDE_FROM_ALL true)
+        endif()
+    endforeach()
+else()
+    # Exclude MQTT 5 demos when building for MQTT 3.1.1 (default)
+    set(mqtt_5_demos
+            "mqtt_demo_mutual_auth_mqtt5"
+    )
+    message( STATUS "MQTT 3.1.1 enabled (default) - excluding MQTT 5 demos from build" )
+    foreach(demo_name ${mqtt_5_demos})
+        if(TARGET ${demo_name})
+            set_target_properties(${demo_name} PROPERTIES EXCLUDE_FROM_ALL true)
+        endif()
+    endforeach()
+endif()
