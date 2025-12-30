@@ -4,7 +4,7 @@
 [submodule "libraries/standard/coreMQTT"]
 	path = libraries/standard/coreMQTT
 	branch = main
-	url = https://github.com/FreeRTOS/coreMQTT.git
+	url = git@github.com:rpcme/coreMQTT.git
 [submodule "libraries/standard/coreHTTP"]
 	path = libraries/standard/coreHTTP
 	branch = main
