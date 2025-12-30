@@ -65,10 +65,7 @@
 /* MQTT API headers. */
 #include "core_mqtt.h"
 #include "core_mqtt_state.h"
-
-#ifdef MQTT_VERSION_5_ENABLED
-    #include "core_mqtt5_properties.h"
-#endif
+#include "core_mqtt5_properties.h"
 
 /* OpenSSL sockets transport implementation. */
 #include "openssl_posix.h"
@@ -1127,26 +1124,24 @@ static int establishMqttSession( MQTTContext_t * pMqttContext,
     MQTTStatus_t mqttStatus;
     MQTTConnectInfo_t connectInfo = { 0 };
 
-    #ifdef MQTT_VERSION_5_ENABLED
-        /* MQTT 5 properties */
-        MQTT5Property_t propBuffer[3];
-        MQTT5Properties_t properties;
-        MQTT5Property_t prop;
-        
-        MQTT5_InitProperties(&properties, propBuffer, 3);
-        
-        /* Add Session Expiry Interval (1 hour) */
-        prop.type = MQTT5_PROPERTY_SESSION_EXPIRY_INTERVAL;
-        prop.value.fourByteInteger = 3600;
-        MQTT5_AddProperty(&properties, &prop);
-        
-        /* Add Receive Maximum */
-        prop.type = MQTT5_PROPERTY_RECEIVE_MAXIMUM;
-        prop.value.twoByteInteger = 10;
-        MQTT5_AddProperty(&properties, &prop);
-        
-        LogInfo( ( "MQTT 5 enabled - adding properties to CONNECT" ) );
-    #endif
+    /* MQTT 5 properties */
+    MQTT5Property_t propBuffer[3];
+    MQTT5Properties_t properties;
+    MQTT5Property_t prop;
+    
+    MQTT5_InitProperties(&properties, propBuffer, 3);
+    
+    /* Add Session Expiry Interval (1 hour) */
+    prop.type = MQTT5_PROPERTY_SESSION_EXPIRY_INTERVAL;
+    prop.value.fourByteInteger = 3600;
+    MQTT5_AddProperty(&properties, &prop);
+    
+    /* Add Receive Maximum */
+    prop.type = MQTT5_PROPERTY_RECEIVE_MAXIMUM;
+    prop.value.twoByteInteger = 10;
+    MQTT5_AddProperty(&properties, &prop);
+    
+    LogInfo( ( "MQTT 5 enabled - adding properties to CONNECT" ) );
 
     #ifdef CLIENT_USERNAME
         void * pMemchrPtr;
@@ -1217,10 +1212,8 @@ static int establishMqttSession( MQTTContext_t * pMqttContext,
         connectInfo.passwordLength = 0U;
     #endif /* ifdef CLIENT_USERNAME */
 
-    #ifdef MQTT_VERSION_5_ENABLED
-        /* Attach MQTT 5 properties to CONNECT */
-        connectInfo.pProperties = &properties;
-    #endif
+    /* Attach MQTT 5 properties to CONNECT */
+    connectInfo.pProperties = &properties;
 
     /* Send MQTT CONNECT packet to broker. */
     mqttStatus = MQTT_Connect( pMqttContext, &connectInfo, NULL, CONNACK_RECV_TIMEOUT_MS, pSessionPresent );

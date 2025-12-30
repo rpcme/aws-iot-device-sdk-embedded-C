@@ -1,8 +1,5 @@
 set( DEMO_NAME "mqtt_demo_mutual_auth_mqtt5" )
 
-# Enable MQTT 5
-add_definitions(-DMQTT_VERSION_5_ENABLED)
-
 # Include MQTT library's source and header path variables.
 include( ${ROOT_DIR}/libraries/standard/coreMQTT/mqttFilePaths.cmake )
 
@@ -27,6 +24,12 @@ target_link_libraries(
     PRIVATE
         clock_posix
         openssl_posix
+)
+
+target_compile_definitions(
+    ${DEMO_NAME}
+    PRIVATE
+        MQTT_VERSION=500
 )
 
 target_include_directories(
